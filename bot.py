@@ -3,6 +3,10 @@ from pyrogram import Client, compose,idle
 import os
 
 from plugins.cb_data import app as Client2
+from aiohttp import web
+from plugins import web_server
+
+PORT = "8080"
 
 TOKEN = os.environ.get("TOKEN", "")
 
@@ -25,6 +29,10 @@ bot = Client(
 
            plugins=dict(root='plugins'))
            
+app = web.AppRunner(await web_server())
+        await app.setup()
+        bind_address = "0.0.0.0"
+        await web.TCPSite(app, bind_address, PORT).start()
 
 if STRING:
     apps = [Client2,bot]
